@@ -71,6 +71,10 @@ public final class Names {
 
         public static final String LANG_PREFIX = Reference.MODID.toLowerCase() + ".config";
     }
+        public static final class Chat {
+            public static final String SAVE_COORDINATES_SUCCESS = "Schematica.chat.saveCoordinatesSuccess";
+            public static final String SAVE_COORDINATES_FAIL = "Schematica.chat.saveCoordinatesFail";
+        }
 
     public static final class Command {
         public static final class Save {
@@ -140,9 +144,29 @@ public final class Names {
             public static final String POINT_BLUE = "schematica.gui.point.blue";
             public static final String SAVE = "schematica.gui.save";
             public static final String SAVE_SELECTION = "schematica.gui.saveselection";
+
         }
 
         public static final class Control {
+            /*
+            Should be in this category, not Save as coordinates are not stored within the schematic.
+            Instead, in the Schematics folder a json file will be present which stores the coordinates in the following way:
+            {
+                "server name or world name" : {
+                        "schematic name 1" : {
+                            "x" : 0,
+                            "y" : 0,
+                            "z" : 0
+                        },
+                        "schematic name 2" : {
+                            "x" : 0,
+                            "y" : 0,
+                            "z" : 0
+                        }
+                }
+            }
+            */
+            public static final String SAVE_COORDINATES = "schematica.gui.savecoordinates";
             public static final String MOVE_SCHEMATIC = "schematica.gui.moveschematic";
             public static final String MATERIALS = "schematica.gui.materials";
             public static final String PRINTER = "schematica.gui.printer";
