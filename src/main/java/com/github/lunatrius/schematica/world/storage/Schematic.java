@@ -102,7 +102,7 @@ public class Schematic implements ISchematic {
     public void removeTileEntity(final int x, final int y, final int z) {
 
         this.tileEntities
-                .removeIf(tileEntity -> tileEntity.xCoord == x && tileEntity.yCoord == y && tileEntity.zCoord == z);
+            .removeIf(tileEntity -> tileEntity.xCoord == x && tileEntity.yCoord == y && tileEntity.zCoord == z);
     }
 
     @Override
@@ -136,7 +136,8 @@ public class Schematic implements ISchematic {
         }
 
         for (final Entity e : this.entities) {
-            if (entity.getUniqueID().equals(e.getUniqueID())) {
+            if (entity.getUniqueID()
+                .equals(e.getUniqueID())) {
                 return;
             }
         }
@@ -150,7 +151,9 @@ public class Schematic implements ISchematic {
             return;
         }
 
-        this.entities.removeIf(e -> entity.getUniqueID().equals(e.getUniqueID()));
+        this.entities.removeIf(
+            e -> entity.getUniqueID()
+                .equals(e.getUniqueID()));
     }
 
     @Override
