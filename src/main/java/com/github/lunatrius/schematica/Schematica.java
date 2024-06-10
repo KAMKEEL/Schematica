@@ -14,6 +14,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkCheckHandler;
+import cpw.mods.fml.common.versioning.ArtifactVersion;
+import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.relauncher.Side;
 
 @Mod(
@@ -30,33 +32,17 @@ public class Schematica {
     @SidedProxy(serverSide = Reference.PROXY_SERVER, clientSide = Reference.PROXY_CLIENT)
     public static CommonProxy proxy;
 
+    private final ArtifactVersion minimumClientJoinVersion = new DefaultArtifactVersion("1.11.0");
+
+    /**
+     * Block any clients older than 1.11.0 to ensure the server-client settings are respected
+     */
+    @SuppressWarnings("unused")
     @NetworkCheckHandler
     public boolean checkModList(Map<String, String> versions, Side side) {
-        if (side == Side.CLIENT) {
-            if (versions.containsKey("Schematica")) {
-                String version = versions.get("Schematica");
-                String[] splitVersion = version.split("\\.");
-                boolean isAllowed = false;
-
-                if (splitVersion.length < 3) return false;
-
-                try {
-                    int major = Integer.parseInt(splitVersion[0]);
-                    int rev = Integer.parseInt(splitVersion[1]);
-
-                    if (major > 1) {
-                        isAllowed = true;
-                    } else if (major == 1 && rev >= 11) {
-                        isAllowed = true;
-                    }
-                } catch (NumberFormatException e) {
-                    Reference.logger.warn("Failed to parse client version of " + version);
-                }
-
-                return isAllowed;
-            }
+        if (side == Side.CLIENT && versions.containsKey(Reference.MODID)) {
+            return minimumClientJoinVersion.compareTo(new DefaultArtifactVersion(versions.get(Reference.MODID))) <= 0;
         }
-
         return true;
     }
 
