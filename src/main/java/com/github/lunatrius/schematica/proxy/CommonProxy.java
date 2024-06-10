@@ -64,9 +64,11 @@ public abstract class CommonProxy {
     }
 
     public void serverStarting(FMLServerStartingEvent event) {
-        event.registerServerCommand(new CommandSchematicaSave());
-        event.registerServerCommand(new CommandSchematicaList());
-        event.registerServerCommand(new CommandSchematicaRemove());
+        if (ConfigurationHandler.serversideSchematicsEnabled) {
+            event.registerServerCommand(new CommandSchematicaSave());
+            event.registerServerCommand(new CommandSchematicaList());
+            event.registerServerCommand(new CommandSchematicaRemove());
+        }
     }
 
     public void createFolders() {
