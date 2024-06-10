@@ -72,6 +72,9 @@ public final class Names {
         public static final String PLAYER_QUOTA_KILOBYTES = "playerQuotaKilobytes";
         public static final String PLAYER_QUOTA_KILOBYTES_DESC = "Amount of storage provided per-player for schematics on the server.";
 
+        public static final String SERVERSIDE_SCHEMATICS_ENABLED = "serversideSchematicsEnabled";
+        public static final String SERVERSIDE_SCHEMATICS_ENABLED_DESC = "Allow players to save schematics serverside, download schematics and see serverside schematics";
+
         public static final String LANG_PREFIX = Reference.MODID.toLowerCase() + ".config";
     }
 

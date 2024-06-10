@@ -30,7 +30,9 @@ public class ServerProxy extends CommonProxy {
     @Override
     public void serverStarting(FMLServerStartingEvent event) {
         super.serverStarting(event);
-        event.registerServerCommand(new CommandSchematicaDownload());
+        if (ConfigurationHandler.serversideSchematicsEnabled) {
+            event.registerServerCommand(new CommandSchematicaDownload());
+        }
     }
 
     @Override
