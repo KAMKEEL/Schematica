@@ -22,7 +22,7 @@ public enum ItemStackSortType {
     }),
     SIZE_ASC("amount", "\u2191", Comparator.comparingInt(wrappedItemStackA -> wrappedItemStackA.total)),
     SIZE_DESC("amount", "\u2193",
-            (wrappedItemStackA, wrappedItemStackB) -> wrappedItemStackB.total - wrappedItemStackA.total);
+        (wrappedItemStackA, wrappedItemStackB) -> wrappedItemStackB.total - wrappedItemStackA.total);
 
     private final Comparator<BlockList.WrappedItemStack> comparator;
 

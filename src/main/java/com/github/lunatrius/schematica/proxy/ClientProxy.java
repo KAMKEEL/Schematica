@@ -69,7 +69,8 @@ public class ClientProxy extends CommonProxy {
     public static MovingObjectPosition movingObjectPosition = null;
     private final SchematicWorld schematicWorld = null;
     public static ILOTRPresent lotrProxy = null;
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting()
+        .create();
     private static final Type schematicDataType = new TypeToken<Map<String, Map<String, SchematicData>>>() {}.getType();
 
     public static void setPlayerData(EntityPlayer player, float partialTicks) {
@@ -187,20 +188,19 @@ public class ClientProxy extends CommonProxy {
     }
 
     private static Map<String, Map<String, SchematicData>> openCoordinatesFile()
-            throws ClassCastException, IOException {
+        throws ClassCastException, IOException {
         File coordinatesFile = new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json");
         Map<String, Map<String, SchematicData>> coordinates = new HashMap<>();
         if (coordinatesFile.exists() && coordinatesFile.canRead() && coordinatesFile.canWrite()) {
             try (Reader reader = Files.newBufferedReader(
-                    new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json").toPath(),
-                    StandardCharsets.UTF_8)) {
+                new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json").toPath(),
+                StandardCharsets.UTF_8)) {
                 coordinates = gson.fromJson(reader, schematicDataType);
             } catch (Exception e1) {
                 // as I forgot to specify utf-8 before older Coordinates.json files will be in the default charset
                 try (Reader reader = Files.newBufferedReader(
-                        new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json")
-                                .toPath(),
-                        Charset.defaultCharset())) {
+                    new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json").toPath(),
+                    Charset.defaultCharset())) {
                     coordinates = gson.fromJson(reader, schematicDataType);
                 } catch (Exception e2) {
                     // failed to read file in utf-8, trying with default charset
@@ -221,8 +221,8 @@ public class ClientProxy extends CommonProxy {
     private static boolean saveCoordinatesFile(Map<String, Map<String, SchematicData>> map) {
         File coordinatesFile = new File(ConfigurationHandler.schematicDirectory, Constants.Files.Coordinates + ".json");
         try (OutputStreamWriter writer = new OutputStreamWriter(
-                new FileOutputStream(coordinatesFile.getAbsoluteFile()),
-                StandardCharsets.UTF_8)) {
+            new FileOutputStream(coordinatesFile.getAbsoluteFile()),
+            StandardCharsets.UTF_8)) {
             gson.toJson(map, schematicDataType, writer);
             writer.flush();
             Reference.logger.info("Successfully written to coordinates file");
@@ -234,7 +234,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     public static boolean addCoordinatesAndRotation(String worldServerName, String schematicName, Integer X, Integer Y,
-            Integer Z, Integer rotation) {
+        Integer Z, Integer rotation) {
         try {
             Map<String, Map<String, SchematicData>> coordinates = openCoordinatesFile();
             SchematicData schematicData = new SchematicData();
@@ -243,7 +243,8 @@ public class ClientProxy extends CommonProxy {
             schematicData.Z = Z;
             schematicData.Rotation = rotation;
             if (coordinates.containsKey(worldServerName)) {
-                coordinates.get(worldServerName).put(schematicName, schematicData);
+                coordinates.get(worldServerName)
+                    .put(schematicName, schematicData);
             } else {
                 coordinates.put(worldServerName, new HashMap<>() {
 
@@ -268,7 +269,7 @@ public class ClientProxy extends CommonProxy {
      *         {@link Integer}
      */
     public static ImmutableTriple<Boolean, Integer, ImmutableTriple<Integer, Integer, Integer>> getCoordinates(
-            String worldServerName, String schematicName) {
+        String worldServerName, String schematicName) {
         try {
             Map<String, Map<String, SchematicData>> coordinates = openCoordinatesFile();
             if (coordinates.containsKey(worldServerName)) {
@@ -276,9 +277,9 @@ public class ClientProxy extends CommonProxy {
                 if (schematicMap.containsKey(schematicName)) {
                     SchematicData schematicData = schematicMap.get(schematicName);
                     return new ImmutableTriple<>(
-                            true,
-                            schematicData.Rotation,
-                            new ImmutableTriple<>(schematicData.X, schematicData.Y, schematicData.Z));
+                        true,
+                        schematicData.Rotation,
+                        new ImmutableTriple<>(schematicData.X, schematicData.Y, schematicData.Z));
                 }
             }
             return new ImmutableTriple<>(false, null, null);
@@ -293,7 +294,7 @@ public class ClientProxy extends CommonProxy {
         super.preInit(event);
 
         final Property[] sliders = { ConfigurationHandler.propAlpha, ConfigurationHandler.propBlockDelta,
-                ConfigurationHandler.propPlaceDelay, ConfigurationHandler.propTimeout };
+            ConfigurationHandler.propPlaceDelay, ConfigurationHandler.propTimeout };
         for (Property prop : sliders) {
             prop.setConfigEntryClass(GuiConfigEntries.NumberSliderEntry.class);
         }
@@ -307,10 +308,18 @@ public class ClientProxy extends CommonProxy {
     public void init(FMLInitializationEvent event) {
         super.init(event);
 
-        FMLCommonHandler.instance().bus().register(InputHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(TickHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(RenderTickHandler.INSTANCE);
-        FMLCommonHandler.instance().bus().register(ConfigurationHandler.INSTANCE);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(InputHandler.INSTANCE);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(TickHandler.INSTANCE);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(RenderTickHandler.INSTANCE);
+        FMLCommonHandler.instance()
+            .bus()
+            .register(ConfigurationHandler.INSTANCE);
 
         MinecraftForge.EVENT_BUS.register(RendererSchematicGlobal.INSTANCE);
         MinecraftForge.EVENT_BUS.register(ChatEventHandler.INSTANCE);
@@ -324,8 +333,10 @@ public class ClientProxy extends CommonProxy {
         try {
             if (Loader.isModLoaded("lotr")) {
                 Reference.logger.info("Lotr mod detected, creating proxy");
-                lotrProxy = Class.forName(Reference.LOTR_PROXY).asSubclass(ILOTRPresent.class).getDeclaredConstructor()
-                        .newInstance();
+                lotrProxy = Class.forName(Reference.LOTR_PROXY)
+                    .asSubclass(ILOTRPresent.class)
+                    .getDeclaredConstructor()
+                    .newInstance();
             } else {
                 lotrProxy = new NoLOTRProxy();
             }
@@ -381,7 +392,7 @@ public class ClientProxy extends CommonProxy {
         SchematicWorld world = new SchematicWorld(schematic, filename);
 
         Reference.logger
-                .debug("Loaded {} [w:{},h:{},l:{}]", filename, world.getWidth(), world.getHeight(), world.getLength());
+            .debug("Loaded {} [w:{},h:{},l:{}]", filename, world.getWidth(), world.getHeight(), world.getLength());
 
         ClientProxy.schematic = world;
         RendererSchematicGlobal.INSTANCE.createRendererSchematicChunks(world);
