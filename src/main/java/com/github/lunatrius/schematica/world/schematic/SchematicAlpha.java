@@ -36,22 +36,7 @@ public class SchematicAlpha extends SchematicFormat {
 
         byte[] localBlocks = tagCompound.getByteArray(Names.NBT.BLOCKS);
         byte[] localMetadata = tagCompound.getByteArray(Names.NBT.DATA);
-
-        boolean extra = false;
-        byte[] extraBlocks = null;
-        byte[] extraBlocksNibble;
-        if (tagCompound.hasKey(Names.NBT.ADD_BLOCKS)) {
-            extra = true;
-            extraBlocksNibble = tagCompound.getByteArray(Names.NBT.ADD_BLOCKS);
-            extraBlocks = new byte[extraBlocksNibble.length * 2];
-            for (int i = 0; i < extraBlocksNibble.length; i++) {
-                extraBlocks[i * 2 + 0] = (byte) ((extraBlocksNibble[i] >> 4) & 0xF);
-                extraBlocks[i * 2 + 1] = (byte) (extraBlocksNibble[i] & 0xF);
-            }
-        } else if (tagCompound.hasKey(Names.NBT.ADD_BLOCKS_SCHEMATICA)) {
-            extra = true;
-            extraBlocks = tagCompound.getByteArray(Names.NBT.ADD_BLOCKS_SCHEMATICA);
-        }
+        byte[] extraBlocks = tagCompound.getByteArray(Names.NBT.ADD_BLOCKS);
 
         short width = tagCompound.getShort(Names.NBT.WIDTH);
         short length = tagCompound.getShort(Names.NBT.LENGTH);
@@ -72,7 +57,7 @@ public class SchematicAlpha extends SchematicFormat {
             for (int y = 0; y < height; y++) {
                 for (int z = 0; z < length; z++) {
                     int index = x + (y * length + z) * width;
-                    int blockID = (localBlocks[index] & 0xFF) | (extra ? ((extraBlocks[index] & 0xFF) << 8) : 0);
+                    int blockID = (localBlocks[index] & 0xFF) | ((extraBlocks[index] & 0xFF) * 256);
                     int meta = localMetadata[index] & 0xFF;
 
                     if ((id = oldToNew.get((short) blockID)) != null) {
@@ -115,8 +100,6 @@ public class SchematicAlpha extends SchematicFormat {
         byte[] localBlocks = new byte[size];
         byte[] localMetadata = new byte[size];
         byte[] extraBlocks = new byte[size];
-        byte[] extraBlocksNibble = new byte[(int) Math.ceil(size / 2.0)];
-        boolean extra = false;
 
         Map<String, Short> mappings = new HashMap<>();
         for (int x = 0; x < schematic.getWidth(); x++) {
@@ -124,13 +107,16 @@ public class SchematicAlpha extends SchematicFormat {
                 for (int z = 0; z < schematic.getLength(); z++) {
                     final int index = x + (y * schematic.getLength() + z) * schematic.getWidth();
                     final Block block = schematic.getBlock(x, y, z);
-                    final int blockId = BLOCK_REGISTRY.getId(block);
-                    localBlocks[index] = (byte) blockId;
-                    localMetadata[index] = (byte) schematic.getBlockMetadata(x, y, z);
-                    if ((extraBlocks[index] = (byte) (blockId >> 8)) > 0) {
-                        extra = true;
+                    int blockId = BLOCK_REGISTRY.getId(block);
+                    int tempblockId = blockId;
+                    int numextra = 0;
+                    for (int i = 1; tempblockId > 256; i++) {
+                        tempblockId = tempblockId - 256;
+                        numextra = i;
                     }
-
+                    localBlocks[index] = (byte) tempblockId;
+                    extraBlocks[index] = (byte) numextra;
+                    localMetadata[index] = (byte) schematic.getBlockMetadata(x, y, z);
                     String name = BLOCK_REGISTRY.getNameForObject(block);
                     if (!mappings.containsKey(name)) {
                         mappings.put(name, (short) blockId);
@@ -167,14 +153,6 @@ public class SchematicAlpha extends SchematicFormat {
             }
         }
 
-        for (int i = 0; i < extraBlocksNibble.length; i++) {
-            if (i * 2 + 1 < extraBlocks.length) {
-                extraBlocksNibble[i] = (byte) ((extraBlocks[i * 2 + 0] << 4) | extraBlocks[i * 2 + 1]);
-            } else {
-                extraBlocksNibble[i] = (byte) (extraBlocks[i * 2 + 0] << 4);
-            }
-        }
-
         final NBTTagList entityList = new NBTTagList();
         final List<Entity> entities = schematic.getEntities();
         for (Entity entity : entities) {
@@ -199,9 +177,7 @@ public class SchematicAlpha extends SchematicFormat {
         tagCompound.setString(Names.NBT.MATERIALS, Names.NBT.FORMAT_ALPHA);
         tagCompound.setByteArray(Names.NBT.BLOCKS, localBlocks);
         tagCompound.setByteArray(Names.NBT.DATA, localMetadata);
-        if (extra) {
-            tagCompound.setByteArray(Names.NBT.ADD_BLOCKS, extraBlocksNibble);
-        }
+        tagCompound.setByteArray(Names.NBT.ADD_BLOCKS, extraBlocks);
         tagCompound.setTag(Names.NBT.ENTITIES, entityList);
         tagCompound.setTag(Names.NBT.TILE_ENTITIES, tileEntitiesList);
         tagCompound.setTag(Names.NBT.MAPPING_SCHEMATICA, nbtMapping);
