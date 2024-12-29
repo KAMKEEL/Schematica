@@ -255,8 +255,7 @@ public class SchematicWorld extends World {
                 }
 
                 break;
-            case SOUTH:
-            {
+            case SOUTH: {
                 for (int y = 0; y < height; y++) {
                     for (int z = 0; z < length; z++) {
                         for (int x = 0; x < width; x++) {
@@ -324,7 +323,8 @@ public class SchematicWorld extends World {
                     for (int z = 0; z < length; z++) {
                         for (int x = 0; x < width; x++) {
                             try {
-                                getBlock(x, height - 1 - y, z).rotateBlock(this, x, height - 1 - y, z, ForgeDirection.EAST);
+                                getBlock(x, height - 1 - y, z)
+                                    .rotateBlock(this, x, height - 1 - y, z, ForgeDirection.EAST);
                             } catch (Exception e) {
                                 Reference.logger.debug("Failed to rotate block!", e);
                             }
@@ -360,7 +360,8 @@ public class SchematicWorld extends World {
                     for (int z = 0; z < length; z++) {
                         for (int x = 0; x < width; x++) {
                             try {
-                                getBlock(x, y, length - 1 - z).rotateBlock(this, x, y, length - 1 - z, ForgeDirection.UP);
+                                getBlock(x, y, length - 1 - z)
+                                    .rotateBlock(this, x, y, length - 1 - z, ForgeDirection.UP);
                             } catch (Exception e) {
                                 Reference.logger.debug("Failed to rotate block!", e);
                             }
@@ -402,7 +403,8 @@ public class SchematicWorld extends World {
                     for (int z = 0; z < length; z++) {
                         for (int x = 0; x < width; x++) {
                             try {
-                                getBlock(width - 1 - x, y, z).rotateBlock(this, width - 1 - x, y, z, ForgeDirection.SOUTH);
+                                getBlock(width - 1 - x, y, z)
+                                    .rotateBlock(this, width - 1 - x, y, z, ForgeDirection.SOUTH);
                             } catch (Exception e) {
                                 Reference.logger.debug("Failed to rotate block!", e);
                             }

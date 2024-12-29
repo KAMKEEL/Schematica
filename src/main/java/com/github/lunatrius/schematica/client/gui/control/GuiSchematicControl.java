@@ -2,26 +2,26 @@ package com.github.lunatrius.schematica.client.gui.control;
 
 import static com.github.lunatrius.schematica.client.util.WorldServerName.worldServerName;
 
-import com.github.lunatrius.schematica.client.gui.util.GuiOrCheckBoxHandler;
-import cpw.mods.fml.client.config.GuiCheckBox;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import com.github.lunatrius.core.client.gui.GuiNumericField;
 import com.github.lunatrius.core.client.gui.GuiScreenBase;
 import com.github.lunatrius.core.util.vector.Vector3i;
 import com.github.lunatrius.schematica.Schematica;
+import com.github.lunatrius.schematica.client.gui.util.GuiOrCheckBoxHandler;
 import com.github.lunatrius.schematica.client.printer.SchematicPrinter;
 import com.github.lunatrius.schematica.client.renderer.RendererSchematicGlobal;
 import com.github.lunatrius.schematica.client.world.SchematicWorld;
 import com.github.lunatrius.schematica.proxy.ClientProxy;
 import com.github.lunatrius.schematica.reference.Constants;
 import com.github.lunatrius.schematica.reference.Names;
-import net.minecraftforge.common.util.ForgeDirection;
-import scala.tools.nsc.Global;
+
+import cpw.mods.fml.client.config.GuiCheckBox;
 
 public class GuiSchematicControl extends GuiScreenBase {
 
@@ -143,26 +143,11 @@ public class GuiSchematicControl extends GuiScreenBase {
             I18n.format(Names.Gui.Control.FLIP));
         this.buttonList.add(this.btnFlip);
 
-        this.btnFlipX = new GuiCheckBox(
-            id++,
-            this.width - 90 - 60,
-            this.height - 50,
-            "X",
-            false);
+        this.btnFlipX = new GuiCheckBox(id++, this.width - 90 - 60, this.height - 50, "X", false);
         this.buttonList.add(this.btnFlipX);
-        this.btnFlipY = new GuiCheckBox(
-            id++,
-            this.width - 90 - 40,
-            this.height - 50,
-            "Y",
-            false);
+        this.btnFlipY = new GuiCheckBox(id++, this.width - 90 - 40, this.height - 50, "Y", false);
         this.buttonList.add(this.btnFlipY);
-        this.btnFlipZ = new GuiCheckBox(
-            id++,
-            this.width - 90 - 20,
-            this.height - 50,
-            "Z",
-            false);
+        this.btnFlipZ = new GuiCheckBox(id++, this.width - 90 - 20, this.height - 50, "Z", false);
         this.buttonList.add(this.btnFlipZ);
         flipBoxes = new GuiOrCheckBoxHandler(btnFlipX, btnFlipY, btnFlipZ);
 
@@ -175,26 +160,11 @@ public class GuiSchematicControl extends GuiScreenBase {
             I18n.format(Names.Gui.Control.ROTATE));
         this.buttonList.add(this.btnRotate);
 
-        this.btnRotateX = new GuiCheckBox(
-            id++,
-            this.width - 90 - 60,
-            this.height - 25,
-            "X",
-            false);
+        this.btnRotateX = new GuiCheckBox(id++, this.width - 90 - 60, this.height - 25, "X", false);
         this.buttonList.add(this.btnRotateX);
-        this.btnRotateY = new GuiCheckBox(
-            id++,
-            this.width - 90 - 40,
-            this.height - 25,
-            "Y",
-            false);
+        this.btnRotateY = new GuiCheckBox(id++, this.width - 90 - 40, this.height - 25, "Y", false);
         this.buttonList.add(this.btnRotateY);
-        this.btnRotateZ = new GuiCheckBox(
-            id++,
-            this.width - 90 - 20,
-            this.height - 25,
-            "Z",
-            false);
+        this.btnRotateZ = new GuiCheckBox(id++, this.width - 90 - 20, this.height - 25, "Z", false);
         this.buttonList.add(this.btnRotateZ);
         rotationBoxes = new GuiOrCheckBoxHandler(btnRotateX, btnRotateY, btnRotateZ);
 

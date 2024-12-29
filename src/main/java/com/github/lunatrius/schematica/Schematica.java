@@ -40,9 +40,9 @@ public class Schematica {
     @SuppressWarnings("unused")
     @NetworkCheckHandler
     public boolean checkModList(Map<String, String> versions, Side side) {
-//        if (side == Side.CLIENT && versions.containsKey(Reference.MODID)) {
-//            return minimumClientJoinVersion.compareTo(new DefaultArtifactVersion(versions.get(Reference.MODID))) <= 0;
-//        }
+        if (side == Side.CLIENT && versions.containsKey(Reference.MODID)) {
+            return minimumClientJoinVersion.compareTo(new DefaultArtifactVersion(versions.get(Reference.MODID))) <= 0;
+        }
         return true;
     }
 

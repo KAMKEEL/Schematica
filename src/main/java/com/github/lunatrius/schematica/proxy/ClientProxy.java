@@ -240,7 +240,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     public static boolean addCoordinatesAndRotation(String worldServerName, String schematicName, Integer X, Integer Y,
-        Integer Z, Integer rotationX, Integer rotationY, Integer rotationZ, Integer flipX, Integer flipY, Integer flipZ) {
+        Integer Z, Integer rotationX, Integer rotationY, Integer rotationZ, Integer flipX, Integer flipY,
+        Integer flipZ) {
         try {
             Map<String, Map<String, SchematicData>> coordinates = openCoordinatesFile();
             SchematicData schematicData = new SchematicData();
@@ -291,7 +292,10 @@ public class ClientProxy extends CommonProxy {
                     return new ImmutableTriple<>(
                         true,
                         new ImmutablePair<>(
-                            new ImmutableTriple<>(schematicData.RotationX, schematicData.RotationY, schematicData.RotationZ),
+                            new ImmutableTriple<>(
+                                schematicData.RotationX,
+                                schematicData.RotationY,
+                                schematicData.RotationZ),
                             new ImmutableTriple<>(schematicData.FlipX, schematicData.FlipY, schematicData.FlipZ)),
                         new ImmutableTriple<>(schematicData.X, schematicData.Y, schematicData.Z));
                 }
