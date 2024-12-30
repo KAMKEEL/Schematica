@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -177,14 +179,16 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+
+
     private static class SchematicData {
 
         public int X;
         public int Y;
         public int Z;
-        // default value is zero, ensuring backwards compatability for updates that don't store the rotation
+        // default value is zero, ensuring backwards compatibility for updates that don't store the rotation
         public int RotationX;
-        public int RotationY;
+        public int Rotation;
         public int RotationZ;
         public int FlipX;
         public int FlipY;
@@ -248,8 +252,8 @@ public class ClientProxy extends CommonProxy {
             schematicData.X = X;
             schematicData.Y = Y;
             schematicData.Z = Z;
-            schematicData.RotationX = rotationX;
-            schematicData.RotationY = rotationY;
+            schematicData.RotationX = rotationX; // This value is left as "Rotation" to provide backwards compat
+            schematicData.Rotation = rotationY;
             schematicData.RotationZ = rotationZ;
             schematicData.FlipX = flipX;
             schematicData.FlipY = flipY;
@@ -294,7 +298,7 @@ public class ClientProxy extends CommonProxy {
                         new ImmutablePair<>(
                             new ImmutableTriple<>(
                                 schematicData.RotationX,
-                                schematicData.RotationY,
+                                schematicData.Rotation,
                                 schematicData.RotationZ),
                             new ImmutableTriple<>(schematicData.FlipX, schematicData.FlipY, schematicData.FlipZ)),
                         new ImmutableTriple<>(schematicData.X, schematicData.Y, schematicData.Z));
