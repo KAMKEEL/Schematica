@@ -12,8 +12,6 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -178,8 +176,6 @@ public class ClientProxy extends CommonProxy {
             position.z = z;
         }
     }
-
-
 
     private static class SchematicData {
 
