@@ -21,8 +21,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-
 import com.github.lunatrius.core.util.vector.Vector3d;
 import com.github.lunatrius.core.util.vector.Vector3i;
 import com.github.lunatrius.schematica.api.ISchematic;
@@ -40,6 +38,7 @@ import com.github.lunatrius.schematica.handler.client.TickHandler;
 import com.github.lunatrius.schematica.handler.client.WorldHandler;
 import com.github.lunatrius.schematica.reference.Constants;
 import com.github.lunatrius.schematica.reference.Reference;
+import com.github.lunatrius.schematica.util.Coordinates;
 import com.github.lunatrius.schematica.world.schematic.SchematicFormat;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -181,8 +180,13 @@ public class ClientProxy extends CommonProxy {
         public int X;
         public int Y;
         public int Z;
-        // default value is zero, ensuring backwards compatability for updates that don't store the rotation
+        // default value is zero, ensuring backwards compatibility for updates that don't store the rotation
+        public int RotationX;
         public int Rotation;
+        public int RotationZ;
+        public int FlipX;
+        public int FlipY;
+        public int FlipZ;
 
         SchematicData() {}
     }
@@ -234,14 +238,21 @@ public class ClientProxy extends CommonProxy {
     }
 
     public static boolean addCoordinatesAndRotation(String worldServerName, String schematicName, Integer X, Integer Y,
-        Integer Z, Integer rotation) {
+        Integer Z, Integer rotationX, Integer rotationY, Integer rotationZ, Integer flipX, Integer flipY,
+        Integer flipZ) {
         try {
             Map<String, Map<String, SchematicData>> coordinates = openCoordinatesFile();
             SchematicData schematicData = new SchematicData();
             schematicData.X = X;
             schematicData.Y = Y;
             schematicData.Z = Z;
-            schematicData.Rotation = rotation;
+            schematicData.RotationX = rotationX; // This value is left as "Rotation" to provide backwards compat
+            schematicData.Rotation = rotationY;
+            schematicData.RotationZ = rotationZ;
+            schematicData.FlipX = flipX;
+            schematicData.FlipY = flipY;
+            schematicData.FlipZ = flipZ;
+
             if (coordinates.containsKey(worldServerName)) {
                 coordinates.get(worldServerName)
                     .put(schematicName, schematicData);
@@ -264,29 +275,30 @@ public class ClientProxy extends CommonProxy {
     /**
      * gets the coordinates if present
      *
-     * @return {@link ImmutableTriple} with bool (true if coordinates found, false if not), {@link Integer} rotation
-     *         (number of times schematic has been rotated [0-3]), and {@link ImmutableTriple} storing X,Y,Z
-     *         {@link Integer}
+     * @return {@link Coordinates} containing rotation, flip and position information, or null if not found.
      */
-    public static ImmutableTriple<Boolean, Integer, ImmutableTriple<Integer, Integer, Integer>> getCoordinates(
-        String worldServerName, String schematicName) {
+    public static Coordinates getCoordinates(String worldServerName, String schematicName) {
         try {
             Map<String, Map<String, SchematicData>> coordinates = openCoordinatesFile();
             if (coordinates.containsKey(worldServerName)) {
                 Map<String, SchematicData> schematicMap = coordinates.get(worldServerName);
                 if (schematicMap.containsKey(schematicName)) {
                     SchematicData schematicData = schematicMap.get(schematicName);
-                    return new ImmutableTriple<>(
-                        true,
+                    return new Coordinates(
+                        schematicData.RotationX,
                         schematicData.Rotation,
-                        new ImmutableTriple<>(schematicData.X, schematicData.Y, schematicData.Z));
+                        schematicData.RotationZ,
+                        schematicData.FlipX,
+                        schematicData.FlipY,
+                        schematicData.FlipZ,
+                        schematicData.X,
+                        schematicData.Y,
+                        schematicData.Z);
                 }
             }
-            return new ImmutableTriple<>(false, null, null);
-        } catch (Exception e) {
+        } catch (Exception ignored) {}
 
-            return new ImmutableTriple<>(false, null, null);
-        }
+        return null;
     }
 
     @Override
